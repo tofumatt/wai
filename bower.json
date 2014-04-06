@@ -1,0 +1,16 @@
+{
+    "name": "wai",
+    "version": "0.1.0",
+    "main": [
+        "dist/wai.min.js"
+    ],
+    "ignore": [
+        ".travis.yml",
+        "LICENSE",
+        "test*"
+    ],
+    "dependencies": {
+    },
+    "devDependencies": {
+    }
+}
