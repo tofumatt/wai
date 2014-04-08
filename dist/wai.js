@@ -1,6 +1,6 @@
 
 /*!
-  wai
+  wai -- https://github.com/tofumatt/wai
   Version 0.1.0
   (c) 2014 tofumatt, MIT License
  */
