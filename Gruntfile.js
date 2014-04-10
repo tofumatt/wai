@@ -18,7 +18,7 @@ module.exports = exports = function(grunt) {
             source: ['src/*.coffee']
         },
         shell: {
-            listFolders: {
+            publishDocs: {
                 options: {
                     stdout: true
                 },
@@ -49,7 +49,7 @@ module.exports = exports = function(grunt) {
 
     grunt.registerTask('default', ['build', 'watch']);
     grunt.registerTask('build', ['coffee', 'uglify']);
-    // grunt.registerTask('publish', ['shell']);
+    grunt.registerTask('publish', ['shell']);
 
     // grunt.registerTask('server', function() {
     //     grunt.log.writeln('Starting web server at test/server.coffee');
