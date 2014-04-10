@@ -8,34 +8,29 @@ language_tabs:
 toc_footers:
   - <a href="https://github.com/tofumatt/wai">Source Code</a>
   - <a href="https://github.com/tripit/slate">(Docs Powered by Slate)</a>
-
 ---
 
 # wai ไหว้
 
 ```javascript
 // Prompt to install our app as an Open Web App as soon as the page has loaded.
-Wai.install({
-    manifest: 'http://mywebapp.com/manifest.webapp',
-    success: function(data) {
-        console.log(data);
+Wai.install('http://mywebapp.com/manifest.webapp', {
+    success: function() {
+        console.log('Success!');
     },
-    error: function(data) {
-        console.error(data);
+    error: function() {
+        console.error('Whoops!');
     }
-})
+});
 ```
 
 ```coffeescript
-# In localStorage, we would do:
-localStorage.setItem "key", JSON.stringify("value")
-doSomethingElse()
-
-# With localForage, we use callbacks:
-localforage.setItem "key", "value", doSomethingElse
-
-# Or we can use Promises:
-localforage.setItem("key", "value").then doSomethingElse
+# Prompt to install our app as an Open Web App as soon as the page has loaded.
+Wai.install "http://mywebapp.com/manifest.webapp",
+  success: ->
+    console.log "Success!"
+  error: ->
+    console.error "Whoops!"
 ```
 
 **Install web apps from your own site.**
@@ -79,10 +74,10 @@ Wai.install('http://myapp.com/manifest.webapp', {
                           // button to initiate install, but don't
                           // want to bug them every site visit if
                           // they chose not to install the app.
-    success: function() {
+    success: function(app, domRequest) {
         alert('Thanks for installing my app!');
     },
-    error: function() {
+    error: function(error, domRequest) {
         alert('There was an error; please contact support.')
     }
 });
@@ -96,9 +91,9 @@ Wai.install "http://myapp.com/manifest.webapp",
                        # button to initiate install, but don't
                        # want to bug them every site visit if
                        # they chose not to install the app.
-  success: ->
+  success: (app, domRequest) ->
     alert "Thanks for installing my app!"
-  error: ->
+  error: (error, domRequest) ->
     alert "There was an error; please contact support."
 ```
 
