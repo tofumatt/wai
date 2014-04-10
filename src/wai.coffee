@@ -13,38 +13,76 @@ mozApps = @navigator.mozApps
 store = @localStorage # or window.localStorage
 
 Wai =
-  install: (options) =>
-    return if !mozApps or store._waiAttemptedAppInstall
+  # Display an install prompt, allowing the user to install this app to their
+  # device. Takes an `options` argument, which is actually a hash of args:
+  #
+  # * numberOfPrompts: number of times to prompt the user to install the
+  #                    app. If undefined or a non-truthy value, it will
+  #                    ignored and app install will only be attempted
+  #                    once. Defaults to `undefined`.
+  #
+  # * onlyPromptOnce: only prompt the user for install once. Useful if you
+  #                   display a prompt on page load rather than when a user
+  #                   taps a button in your app. Defaults to `false`.
+  #
+  # * success:        success callback, run if the user accepts the install and
+  #                   it takes place with no errors. The first argument passed
+  #                   to the callback is the [App object](app), while the
+  #                   second is the [DOMRequest object](domreq).
+  #
+  # * error:          error callback, run if the user accepts the install, but
+  #                   it fails. The first argument passed to the callback is
+  #                   the [error object](error), while the second is the
+  #                   [DOMRequest object](domreq).
+  #
+  # [app]: https://developer.mozilla.org/en-US/docs/Web/API/App
+  # [domreq]: https://developer.mozilla.org/en-US/docs/Web/API/DOMRequest
+  # [error]: https://developer.mozilla.org/en-US/docs/Web/API/Apps.install#Error
+  install: (options) ->
+    installAttempts = parseInt(store._waiAttemptedAppInstall, 10) or 0
+
+    return if !mozApps or (store._waiAttemptedAppInstall and
+      ((options.onlyPromptOnce and installAttempts) or
+      installAttempts >= options.numberOfPrompts)
+    )
 
     # If this is a Mozilla app, check to see if it's installed already.
     if mozApps
       checkIfInstalled = mozApps.getSelf()
       checkIfInstalled.addEventListener "success", ->
+        # The app is already installed, so let's get out of here.
         return if checkIfInstalled.result
 
         # Setup a handler to set if the app went uninstalled on page unload.
         window.addEventListener "beforeunload", (event) ->
-          store._waiAttemptedAppInstall = if store._waiAttemptedAppInstall
-          then (parseInt(store._waiAttemptedAppInstall, 10) + 1).toString()
-          else '1'
+          # We use localStorage not only because it's the most cross-browser
+          # compatible and lightweight, but because async APIs have problems
+          # on `beforeunload`.
+          #
+          # See: https://github.com/mozilla/localForage/issues/131
+          if store._waiAppIsInstalled
+            store._waiAttemptedAppInstall = '0'
+          else
+            store._waiAttemptedAppInstall = (installAttempts + 1).toString()
 
         if options.manifest
           manifestURL = options.manifest
-          manifestURL = "#{window.location.protocol}//#{manifestURL}" unless manifestURL.match /^https?:\/\//
+          manifestURL = "#{window.location.protocol}//\
+                         #{manifestURL}" unless manifestURL.match /^https?:\/\//
         else
           manifestURL = "#{window.location.protocol}//#{window.location.host}\
                          /manifest.webapp"
 
-        installApp = mozApps.install(manifestURL)
+        domRequest = mozApps.install(manifestURL)
 
         # Callbacks for each install outcome.
-        installApp.addEventListener "success", (data) ->
+        domRequest.addEventListener "success", ->
           store._waiAppIsInstalled = '1'
-          options.success(data) if options.success
+          options.success(domRequest.result, domRequest) if options.success
 
         # App install failed.
-        installApp.addEventListener "error", (data) ->
-          options.error(data) if options.error
+        domRequest.addEventListener "error", ->
+          options.error(domRequest.result, domRequest) if options.error
 
 # See what kind of module system we've got going on and load in WAI
 # appropriately.

@@ -14,46 +14,50 @@
   store = this.localStorage;
 
   Wai = {
-    install: (function(_this) {
-      return function(options) {
-        var checkIfInstalled;
-        if (!mozApps || store._waiAttemptedAppInstall) {
-          return;
-        }
-        if (mozApps) {
-          checkIfInstalled = mozApps.getSelf();
-          return checkIfInstalled.addEventListener("success", function() {
-            var installApp, manifestURL;
-            if (checkIfInstalled.result) {
-              return;
-            }
-            window.addEventListener("beforeunload", function(event) {
-              return store._waiAttemptedAppInstall = store._waiAttemptedAppInstall ? (parseInt(store._waiAttemptedAppInstall, 10) + 1).toString() : '1';
-            });
-            if (options.manifest) {
-              manifestURL = options.manifest;
-              if (!manifestURL.match(/^https?:\/\//)) {
-                manifestURL = "" + window.location.protocol + "//" + manifestURL;
-              }
+    install: function(options) {
+      var checkIfInstalled, installAttempts;
+      installAttempts = parseInt(store._waiAttemptedAppInstall, 10) || 0;
+      if (!mozApps || (store._waiAttemptedAppInstall && ((options.onlyPromptOnce && installAttempts) || installAttempts >= options.numberOfPrompts))) {
+        return;
+      }
+      if (mozApps) {
+        checkIfInstalled = mozApps.getSelf();
+        return checkIfInstalled.addEventListener("success", function() {
+          var domRequest, manifestURL;
+          if (checkIfInstalled.result) {
+            return;
+          }
+          window.addEventListener("beforeunload", function(event) {
+            if (store._waiAppIsInstalled) {
+              return store._waiAttemptedAppInstall = '0';
             } else {
-              manifestURL = "" + window.location.protocol + "//" + window.location.host + "/manifest.webapp";
+              return store._waiAttemptedAppInstall = (installAttempts + 1).toString();
             }
-            installApp = mozApps.install(manifestURL);
-            installApp.addEventListener("success", function(data) {
-              store._waiAppIsInstalled = '1';
-              if (options.success) {
-                return options.success(data);
-              }
-            });
-            return installApp.addEventListener("error", function(data) {
-              if (options.error) {
-                return options.error(data);
-              }
-            });
           });
-        }
-      };
-    })(this)
+          if (options.manifest) {
+            manifestURL = options.manifest;
+            if (!manifestURL.match(/^https?:\/\//)) {
+              manifestURL = "" + window.location.protocol + "//" + manifestURL;
+            }
+          } else {
+            manifestURL = "" + window.location.protocol + "//" + window.location.host + "/manifest.webapp";
+          }
+          domRequest = mozApps.install(manifestURL);
+          domRequest.addEventListener("success", function() {
+            parseInt(store._waiAttemptedAppInstall, 10);
+            store._waiAppIsInstalled = '1';
+            if (options.success) {
+              return options.success(domRequest.result, domRequest);
+            }
+          });
+          return domRequest.addEventListener("error", function() {
+            if (options.error) {
+              return options.error(domRequest.result, domRequest);
+            }
+          });
+        });
+      }
+    }
   };
 
   if (typeof define === "function" && define.amd) {
