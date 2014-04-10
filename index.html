@@ -77,25 +77,21 @@
       <div class="content">
         <h1 id="wai-ไหว้">wai ไหว้</h1>
 <pre class="highlight javascript"><span class="c1">// Prompt to install our app as an Open Web App as soon as the page has loaded.
-</span><span class="nx">Wai</span><span class="p">.</span><span class="nx">install</span><span class="p">({</span>
-    <span class="na">manifest</span><span class="p">:</span> <span class="s1">'http://mywebapp.com/manifest.webapp'</span><span class="p">,</span>
-    <span class="na">success</span><span class="p">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">data</span><span class="p">)</span> <span class="p">{</span>
-        <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">data</span><span class="p">);</span>
+</span><span class="nx">Wai</span><span class="p">.</span><span class="nx">install</span><span class="p">(</span><span class="s1">'http://mywebapp.com/manifest.webapp'</span><span class="p">,</span> <span class="p">{</span>
+    <span class="na">success</span><span class="p">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+        <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">'Success!'</span><span class="p">);</span>
     <span class="p">},</span>
-    <span class="na">error</span><span class="p">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">data</span><span class="p">)</span> <span class="p">{</span>
-        <span class="nx">console</span><span class="p">.</span><span class="nx">error</span><span class="p">(</span><span class="nx">data</span><span class="p">);</span>
+    <span class="na">error</span><span class="p">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+        <span class="nx">console</span><span class="p">.</span><span class="nx">error</span><span class="p">(</span><span class="s1">'Whoops!'</span><span class="p">);</span>
     <span class="p">}</span>
-<span class="p">})</span>
+<span class="p">});</span>
 </pre>
-<pre class="highlight coffeescript"><span class="c1"># In localStorage, we would do:
-</span><span class="nx">localStorage</span><span class="p">.</span><span class="na">setItem</span> <span class="s">"key"</span><span class="p">,</span> <span class="nx">JSON</span><span class="p">.</span><span class="na">stringify</span><span class="p">(</span><span class="s">"value"</span><span class="p">)</span>
-<span class="nx">doSomethingElse</span><span class="p">()</span>
-
-<span class="c1"># With localForage, we use callbacks:
-</span><span class="nx">localforage</span><span class="p">.</span><span class="na">setItem</span> <span class="s">"key"</span><span class="p">,</span> <span class="s">"value"</span><span class="p">,</span> <span class="nx">doSomethingElse</span>
-
-<span class="c1"># Or we can use Promises:
-</span><span class="nx">localforage</span><span class="p">.</span><span class="na">setItem</span><span class="p">(</span><span class="s">"key"</span><span class="p">,</span> <span class="s">"value"</span><span class="p">).</span><span class="na">then</span> <span class="nx">doSomethingElse</span>
+<pre class="highlight coffeescript"><span class="c1"># Prompt to install our app as an Open Web App as soon as the page has loaded.
+</span><span class="nx">Wai</span><span class="p">.</span><span class="na">install</span> <span class="s">"http://mywebapp.com/manifest.webapp"</span><span class="p">,</span>
+  <span class="na">success</span><span class="o">:</span> <span class="o">-&gt;</span>
+    <span class="nx">console</span><span class="p">.</span><span class="na">log</span> <span class="s">"Success!"</span>
+  <span class="na">error</span><span class="o">:</span> <span class="o">-&gt;</span>
+    <span class="nx">console</span><span class="p">.</span><span class="na">error</span> <span class="s">"Whoops!"</span>
 </pre>
 
 <p><strong>Install web apps from your own site.</strong></p>
@@ -131,10 +127,10 @@ as Wai is ready; it has no dependencies and doesn&rsquo;t rely on any <code clas
 </span>                          <span class="c1">// button to initiate install, but don't
 </span>                          <span class="c1">// want to bug them every site visit if
 </span>                          <span class="c1">// they chose not to install the app.
-</span>    <span class="na">success</span><span class="p">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+</span>    <span class="na">success</span><span class="p">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">app</span><span class="p">,</span> <span class="nx">domRequest</span><span class="p">)</span> <span class="p">{</span>
         <span class="nx">alert</span><span class="p">(</span><span class="s1">'Thanks for installing my app!'</span><span class="p">);</span>
     <span class="p">},</span>
-    <span class="na">error</span><span class="p">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+    <span class="na">error</span><span class="p">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">error</span><span class="p">,</span> <span class="nx">domRequest</span><span class="p">)</span> <span class="p">{</span>
         <span class="nx">alert</span><span class="p">(</span><span class="s1">'There was an error; please contact support.'</span><span class="p">)</span>
     <span class="p">}</span>
 <span class="p">});</span>
@@ -146,9 +142,9 @@ as Wai is ready; it has no dependencies and doesn&rsquo;t rely on any <code clas
 </span>                       <span class="c1"># button to initiate install, but don't
 </span>                       <span class="c1"># want to bug them every site visit if
 </span>                       <span class="c1"># they chose not to install the app.
-</span>  <span class="na">success</span><span class="o">:</span> <span class="o">-&gt;</span>
+</span>  <span class="na">success</span><span class="o">:</span> <span class="p">(</span><span class="nx">app</span><span class="p">,</span> <span class="nx">domRequest</span><span class="p">)</span> <span class="o">-&gt;</span>
     <span class="nx">alert</span> <span class="s">"Thanks for installing my app!"</span>
-  <span class="na">error</span><span class="o">:</span> <span class="o">-&gt;</span>
+  <span class="na">error</span><span class="o">:</span> <span class="p">(</span><span class="nx">error</span><span class="p">,</span> <span class="nx">domRequest</span><span class="p">)</span> <span class="o">-&gt;</span>
     <span class="nx">alert</span> <span class="s">"There was an error; please contact support."</span>
 </pre>
 
