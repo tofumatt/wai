@@ -1,0 +1,202 @@
+
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+
+    <!-- Always force latest IE rendering engine or request Chrome Frame -->
+    <meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible">
+
+    <!-- Use title if it's in the page YAML frontmatter -->
+    <title>wai API Reference</title>
+
+    <link href="stylesheets/screen.css" media="screen" rel="stylesheet" type="text/css" />
+    <link href="stylesheets/print.css" media="print" rel="stylesheet" type="text/css" />
+    <script src="//code.jquery.com/jquery-1.10.1.min.js"></script>
+    <script src="javascripts/all.js" type="text/javascript"></script>
+
+    <script>
+      $(function() {
+        var toc = $("#toc").tocify({
+          selectors: "h1,h2",
+          extendPage: false,
+          theme: "none",
+          smoothScroll: false,
+          showEffectSpeed: 0,
+          hideEffectSpeed: 180,
+          ignoreSelector: ".toc-ignore",
+          hashGenerator: 'pretty',
+          highlightOffset: 60,
+          scrollTo: -2,
+          scrollHistory: true,
+          hashGenerator: function(text, element) {
+            return element[0].getAttribute('id');
+          }
+        }).data("toc-tocify");
+        // Hack to make already open sections to start opened,
+        // instead of displaying an ugly animation
+        setTimeout(function() {
+          toc.setOption("showEffectSpeed", 180);
+        },50);
+        setupLanguages([
+          
+            
+              
+                'javascript',
+              
+            
+              
+                'coffeescript',
+              
+            
+          
+        ]);
+      });
+    </script>
+  </head>
+
+  <body class="index">
+    <div class="tocify-wrapper">
+      <div id="toc">
+      </div>
+      
+      <ul class="toc-footer">
+        
+          <li><a href="https://github.com/tofumatt/wai">Source Code</a></li>
+        
+          <li><a href="https://github.com/tripit/slate">(Docs Powered by Slate)</a></li>
+        
+      </ul>
+      
+
+      <div class="build-status">
+        <a href="http://travis-ci.org/mozilla/localForage"><img src="https://secure.travis-ci.org/mozilla/localForage.png?branch=master" alt="Build Status"></a>
+      </div>
+    </div>
+    <div class="page-wrapper">
+      <div class="content">
+        <h1 id="wai-ไหว้">wai ไหว้</h1>
+<pre class="highlight javascript"><span class="c1">// Prompt to install our app as an Open Web App as soon as the page has loaded.
+</span><span class="nx">Wai</span><span class="p">.</span><span class="nx">install</span><span class="p">({</span>
+    <span class="na">manifest</span><span class="p">:</span> <span class="s1">'http://mywebapp.com/manifest.webapp'</span><span class="p">,</span>
+    <span class="na">success</span><span class="p">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">data</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">data</span><span class="p">);</span>
+    <span class="p">},</span>
+    <span class="na">error</span><span class="p">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">data</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nx">console</span><span class="p">.</span><span class="nx">error</span><span class="p">(</span><span class="nx">data</span><span class="p">);</span>
+    <span class="p">}</span>
+<span class="p">})</span>
+</pre>
+<pre class="highlight coffeescript"><span class="c1"># In localStorage, we would do:
+</span><span class="nx">localStorage</span><span class="p">.</span><span class="na">setItem</span> <span class="s">"key"</span><span class="p">,</span> <span class="nx">JSON</span><span class="p">.</span><span class="na">stringify</span><span class="p">(</span><span class="s">"value"</span><span class="p">)</span>
+<span class="nx">doSomethingElse</span><span class="p">()</span>
+
+<span class="c1"># With localForage, we use callbacks:
+</span><span class="nx">localforage</span><span class="p">.</span><span class="na">setItem</span> <span class="s">"key"</span><span class="p">,</span> <span class="s">"value"</span><span class="p">,</span> <span class="nx">doSomethingElse</span>
+
+<span class="c1"># Or we can use Promises:
+</span><span class="nx">localforage</span><span class="p">.</span><span class="na">setItem</span><span class="p">(</span><span class="s">"key"</span><span class="p">,</span> <span class="s">"value"</span><span class="p">).</span><span class="na">then</span> <span class="nx">doSomethingElse</span>
+</pre>
+
+<p><strong>Install web apps from your own site.</strong></p>
+
+<p>Wai is a simple library that allows you to install your <a href="owa">Open Web App</a>
+from any site, including its own domain. While apps can be installed from the
+<a href="market">Firefox Marketplace</a>, you may wish to also allow installs from your
+own domain. This library lets you call one method (<code class="prettyprint">Wai.install()</code>) to install
+the app, provided the user&rsquo;s browser is capable.</p>
+
+<p><a href="https://github.com/tofumatt/wai/releases">Download Wai on GitHub.</a></p>
+
+<p>ขอบคุณ!</p>
+
+<h1 id="installation">Installation</h1>
+<pre class="highlight shell"><span class="c"># Optional installation with bower:</span>
+bower install wai
+</pre>
+<pre class="highlight html"><span class="nt">&lt;script </span><span class="na">src=</span><span class="s">"wai.js"</span><span class="nt">&gt;&lt;/script&gt;</span>
+<span class="nt">&lt;script&gt;</span><span class="nx">Wai</span><span class="p">.</span><span class="nx">install</span><span class="p">();</span><span class="nt">&lt;/script&gt;</span>
+</pre>
+
+<p>Install Wai by including it in your page. You can run the install code as soon
+as Wai is ready; it has no dependencies and doesn&rsquo;t rely on any <code class="prettyprint">ready</code> events.</p>
+
+<h1 id="api">API</h1>
+
+<h2 id="install">install</h2>
+<pre class="highlight javascript"><span class="nx">Wai</span><span class="p">.</span><span class="nx">install</span><span class="p">(</span><span class="s1">'http://myapp.com/manifest.webapp'</span><span class="p">,</span> <span class="p">{</span>
+    <span class="na">onlyPromptOnce</span><span class="p">:</span> <span class="kc">true</span><span class="p">,</span> <span class="c1">// Only prompt for install the first time
+</span>                          <span class="c1">// the user visits this site. Useful if
+</span>                          <span class="c1">// you don't want the user to click a
+</span>                          <span class="c1">// button to initiate install, but don't
+</span>                          <span class="c1">// want to bug them every site visit if
+</span>                          <span class="c1">// they chose not to install the app.
+</span>    <span class="na">success</span><span class="p">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+        <span class="nx">alert</span><span class="p">(</span><span class="s1">'Thanks for installing my app!'</span><span class="p">);</span>
+    <span class="p">},</span>
+    <span class="na">error</span><span class="p">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+        <span class="nx">alert</span><span class="p">(</span><span class="s1">'There was an error; please contact support.'</span><span class="p">)</span>
+    <span class="p">}</span>
+<span class="p">});</span>
+</pre>
+<pre class="highlight coffeescript"><span class="nx">Wai</span><span class="p">.</span><span class="na">install</span> <span class="s">"http://myapp.com/manifest.webapp"</span><span class="p">,</span>
+  <span class="na">onlyPromptOnce</span><span class="o">:</span> <span class="no">true</span> <span class="c1"># Only prompt for install the first time
+</span>                       <span class="c1"># the user visits this site. Useful if
+</span>                       <span class="c1"># you don't want the user to click a
+</span>                       <span class="c1"># button to initiate install, but don't
+</span>                       <span class="c1"># want to bug them every site visit if
+</span>                       <span class="c1"># they chose not to install the app.
+</span>  <span class="na">success</span><span class="o">:</span> <span class="o">-&gt;</span>
+    <span class="nx">alert</span> <span class="s">"Thanks for installing my app!"</span>
+  <span class="na">error</span><span class="o">:</span> <span class="o">-&gt;</span>
+    <span class="nx">alert</span> <span class="s">"There was an error; please contact support."</span>
+</pre>
+
+<p><code class="prettyprint">install(manifestURL[, options])</code></p>
+
+<p>Display an install prompt, allowing the user to install this app to their
+device. Takes an <code class="prettyprint">options</code> argument, which is actually a hash of args:</p>
+
+<ul>
+<li><code class="prettyprint">numberOfPrompts</code>: number of times to prompt the user to install the
+                 app. If undefined or a non-truthy value, it will
+                 ignored and app install will only be attempted
+                 once. Defaults to <code class="prettyprint">undefined</code>.</li>
+<li><code class="prettyprint">onlyPromptOnce</code>:  only prompt the user for install once. Useful if you
+                 display a prompt on page load rather than when a user
+                 taps a button in your app. Defaults to <code class="prettyprint">false</code>.</li>
+<li><code class="prettyprint">success</code>:         success callback, run if the user accepts the install and
+                 it takes place with no errors. The first argument passed
+                 to the callback is the <a href="app">App object</a>, while the
+                 second is the <a href="domreq">DOMRequest object</a>.</li>
+<li><code class="prettyprint">error</code>:           error callback, run if the user accepts the install, but
+                 it fails. The first argument passed to the callback is
+                 the <a href="error">error object</a>, while the second is the
+                 <a href="domreq">DOMRequest object</a>.</li>
+</ul>
+
+<p><aside class="notice">You can call <code class="prettyprint">install()</code> on a page that already has this
+web app installed. <code class="prettyprint">install()</code> checks to see if the app you&rsquo;re trying to
+install is already available on the user&rsquo;s device. If it is already installed,
+no code will be run.</aside></p>
+
+        
+      </div>
+      <div class="dark-box">
+        <div id="lang-selector">
+          
+            
+              
+                <a href="#" data-language-name="javascript">javascript</a>
+              
+            
+              
+                <a href="#" data-language-name="coffeescript">coffeescript</a>
+              
+            
+          
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
