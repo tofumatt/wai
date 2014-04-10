@@ -36,5 +36,11 @@
   "licence": "MIT",
   "bugs": {
     "url": "http://github.com/tofumatt/wai/issues"
-  }
+  },
+  "directories": {
+    "doc": "docs"
+  },
+  "dependencies": {
+  },
+  "license": "MIT"
 }
