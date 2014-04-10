@@ -38,9 +38,17 @@ Wai =
   # [app]: https://developer.mozilla.org/en-US/docs/Web/API/App
   # [domreq]: https://developer.mozilla.org/en-US/docs/Web/API/DOMRequest
   # [error]: https://developer.mozilla.org/en-US/docs/Web/API/Apps.install#Error
-  install: (options) ->
+  install: (manifest, options) ->
+    # Was manifest assumed and thus options passed as the first argument?
+    # That's cool.
+    if typeof manifest is "object"
+      options = manifest
+      manifest = null
+
+    # Check to see if an install with Wai has been attempted in the past.
     installAttempts = parseInt(store._waiAttemptedAppInstall, 10) or 0
 
+    # If mozApps isn't available the platform isn't supported and we quit.
     return if !mozApps or (store._waiAttemptedAppInstall and
       ((options.onlyPromptOnce and installAttempts) or
       installAttempts >= options.numberOfPrompts)
@@ -65,8 +73,8 @@ Wai =
           else
             store._waiAttemptedAppInstall = (installAttempts + 1).toString()
 
-        if options.manifest
-          manifestURL = options.manifest
+        if manifest
+          manifestURL = manifest
           manifestURL = "#{window.location.protocol}//\
                          #{manifestURL}" unless manifestURL.match /^https?:\/\//
         else

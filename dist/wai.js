@@ -14,8 +14,12 @@
   store = this.localStorage;
 
   Wai = {
-    install: function(options) {
+    install: function(manifest, options) {
       var checkIfInstalled, installAttempts;
+      if (typeof manifest === "object") {
+        options = manifest;
+        manifest = null;
+      }
       installAttempts = parseInt(store._waiAttemptedAppInstall, 10) || 0;
       if (!mozApps || (store._waiAttemptedAppInstall && ((options.onlyPromptOnce && installAttempts) || installAttempts >= options.numberOfPrompts))) {
         return;
@@ -34,8 +38,8 @@
               return store._waiAttemptedAppInstall = (installAttempts + 1).toString();
             }
           });
-          if (options.manifest) {
-            manifestURL = options.manifest;
+          if (manifest) {
+            manifestURL = manifest;
             if (!manifestURL.match(/^https?:\/\//)) {
               manifestURL = "" + window.location.protocol + "//" + manifestURL;
             }
@@ -44,7 +48,6 @@
           }
           domRequest = mozApps.install(manifestURL);
           domRequest.addEventListener("success", function() {
-            parseInt(store._waiAttemptedAppInstall, 10);
             store._waiAppIsInstalled = '1';
             if (options.success) {
               return options.success(domRequest.result, domRequest);
