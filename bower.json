@@ -1,12 +1,18 @@
 {
     "name": "wai",
-    "version": "0.1.0",
+    "version": "0.2.0",
     "main": [
-        "dist/wai.min.js"
+        "wai.min.js"
     ],
     "ignore": [
         ".travis.yml",
+        "CONTRIBUTING.md",
+        "config.rb",
+        "Gemfile",
+        "Gemfile.lock",
+        "Rakefile",
         "LICENSE",
+        "docs*",
         "test*"
     ],
     "dependencies": {

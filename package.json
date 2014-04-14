@@ -31,8 +31,8 @@
     "grunt-contrib-coffee": "~0.10.1",
     "grunt-coffeelint": "0.0.8"
   },
-  "browser": "dist/wai.js",
-  "main": "dist/wai.js",
+  "browser": "wai.js",
+  "main": "wai.js",
   "licence": "MIT",
   "bugs": {
     "url": "http://github.com/tofumatt/wai/issues"

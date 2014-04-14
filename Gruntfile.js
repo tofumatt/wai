@@ -3,12 +3,10 @@ module.exports = exports = function(grunt) {
     'use strict';
 
     grunt.initConfig({
-        casper: {
-        },
         coffee: {
           compile: {
             files: {
-              'dist/wai.js': 'src/*.coffee'
+              'wai.js': 'src/*.coffee'
             }
           }
         },
@@ -28,7 +26,7 @@ module.exports = exports = function(grunt) {
         uglify: {
             wai: {
                 files: {
-                    'dist/wai.min.js': ['dist/wai.js']
+                    'wai.min.js': ['wai.js']
                 }
             }
         },
@@ -50,12 +48,5 @@ module.exports = exports = function(grunt) {
     grunt.registerTask('default', ['build', 'watch']);
     grunt.registerTask('build', ['coffee', 'uglify']);
     grunt.registerTask('publish', ['shell']);
-
-    // grunt.registerTask('server', function() {
-    //     grunt.log.writeln('Starting web server at test/server.coffee');
-
-    //     require('./test/server.coffee').listen(8181);
-    // });
-
     grunt.registerTask('test', ['build', 'coffeelint']);
 };
